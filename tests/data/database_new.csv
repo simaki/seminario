@@ -1,0 +1,3 @@
+index,date,begin time,end time,place,speaker,affiliation,title,abstract file,slide file
+0,2019-01-01,12:00,13:00,101A,Alice Speaker,Alabama University,Apple Effect,alice.txt,alice.pdf
+1,2019-02-02,12:30,13:30,102B,Bob Talker,Boston University,Banana Effect,bob.txt,bob.pdf
