@@ -5,7 +5,7 @@ Python package for seminar organization.
 ## Installation
 
 ```sh
-$ pip install pyseminar
+$ pip install seminario
 ```
 
 ## Usage
