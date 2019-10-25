@@ -10,8 +10,8 @@ _ticker_item = {
     'S': 'speaker',
     'F': 'affiliation',
     'T': 'title',
-    'A': 'abstract file',
-    'L': 'slide file',
+    'A': 'abstract',
+    'L': 'slide',
 }
 _list_ticker = _ticker_item.keys()
 _list_item = _ticker_item.values()

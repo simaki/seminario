@@ -33,9 +33,6 @@ class Seminar():
         Relative path of the abstract file to ``_Config.dir_abstract``.
     - slide_file : str
         Relative path of the slide file to ``_Config.dir_slide``.
-    - abstract : str
-        Abstract sentences.
-        It is automatically read if ``self.abstract_file`` is not None.
     """
     def __init__(
         self,
@@ -71,28 +68,28 @@ class Seminar():
         >>> type(seminar)
         <class 'seminario.Seminar'>
         >>> seminar
-        - date          : 2019-01-01
-        - begin time    : 12:00
-        - end_time      : 13:00
-        - place         : 101A
-        - speaker       : Alice Speaker
-        - affiliation   : Alabama University
-        - title         : Apple Effect
-        - abstract file : alice.txt
-        - slide file    : alice.pdf
+        - date        : 2019-01-01
+        - begin time  : 12:00
+        - end_time    : 13:00
+        - place       : 101A
+        - speaker     : Alice Speaker
+        - affiliation : Alabama University
+        - title       : Apple Effect
+        - abstract    : alice.txt
+        - slide       : alice.pdf
 
         The following example initializes the same ``Seminar`` from ``dict``.
 
         >>> data = {
-        ...     'date':             datetime.date(2019, 1, 1),
-        ...     'begin time':       datetime.time(12, 0),
-        ...     'end time':         datetime.time(13, 0),
-        ...     'place':            '101A',
-        ...     'speaker':          'Alice Speaker',
-        ...     'affiliation':      'Alabama University',
-        ...     'title':            'Apple Effect',
-        ...     'abstract file':    'alice.txt'
-        ...     'slide file':       'alice.pdf'
+        ...     'date':         datetime.date(2019, 1, 1),
+        ...     'begin time':   datetime.time(12, 0),
+        ...     'end time':     datetime.time(13, 0),
+        ...     'place':        '101A',
+        ...     'speaker':      'Alice Speaker',
+        ...     'affiliation':  'Alabama University',
+        ...     'title':        'Apple Effect',
+        ...     'abstract':     'alice.txt'
+        ...     'slide':        'alice.pdf'
         ... }
         >>> seminar = seminario.Seminar(data=data)
         """
@@ -119,8 +116,8 @@ class Seminar():
                 speaker=data.get('speaker'),
                 affiliation=data.get('affiliation'),
                 title=data.get('title'),
-                abstract_file=data.get('abstract file'),
-                slide_file=data.get('slide file'),
+                abstract_file=data.get('abstract'),
+                slide_file=data.get('slide'),
             )
         elif isinstance(data, pd.Series):
             self.__init__(
@@ -132,8 +129,8 @@ class Seminar():
                 speaker=data['speaker'],
                 affiliation=data['affiliation'],
                 title=data['title'],
-                abstract_file=data['abstract file'],
-                slide_file=data['slide file'],
+                abstract_file=data['abstract'],
+                slide_file=data['slide'],
             )
         else:
             raise TypeError('Invalid type of data: ', type(data))
@@ -157,15 +154,15 @@ class Seminar():
     def _dict(self):
         """Return ``dict`` of parameters."""
         return {
-            'date':             self.date,
-            'begin time':       self.begin_time,
-            'end time':         self.end_time,
-            'place':            self.place,
-            'speaker':          self.speaker,
-            'affiliation':      self.affiliation,
-            'title':            self.title,
-            'abstract file':    self.abstract_file,
-            'slide file':       self.slide_file,
+            'date':         self.date,
+            'begin time':   self.begin_time,
+            'end time':     self.end_time,
+            'place':        self.place,
+            'speaker':      self.speaker,
+            'affiliation':  self.affiliation,
+            'title':        self.title,
+            'abstract':     self.abstract_file,
+            'slide':        self.slide_file,
         }
 
     def __str__(self):
@@ -232,19 +229,19 @@ class Seminar():
         -------
 
         >>> seminar
-        date          : 2019-01-01
-        begin time    : 12:00
-        end time      : 13:00
-        place         : 101A
-        speaker       : Alice Speaker
-        title         : Apple Effect
-        abstract file : alice.txt
-        slide file    : alice.pdf
+        date        : 2019-01-01
+        begin time  : 12:00
+        end time    : 13:00
+        place       : 101A
+        speaker     : Alice Speaker
+        title       : Apple Effect
+        abstract    : alice.txt
+        slide       : alice.pdf
         >>> seminar.to_SeminarDataFrame()
                 date begin time end time place        speaker ...
         0 2019-01-01      12:00    13:00  101A  Alice Speaker ...
-                 title abstract file slide file
-        0 Apple Effect     alice.txt  alice.pdf
+                 title   abstract      slide
+        0 Apple Effect  alice.txt  alice.pdf
         """
         return pd.Series(data=self._dict)
 
@@ -307,8 +304,8 @@ class Seminar():
                 '{}'
                 '</p>'.format(_Config.name)
             ),
-            'datetime_and_place': (
-                '<p class="datetime_and_place">'
+            'datetime_place': (
+                '<p class="datetime_place">'
                 '{}, at {}'
                 '</p>'.format(date_time, place)
             ),
@@ -317,8 +314,8 @@ class Seminar():
                 '{}'
                 '</p>'.format(title)
             ),
-            'speaker_and_affiliation': (
-                '<p class="speaker_and_affiliation">'
+            'speaker': (
+                '<p class="speaker">'
                 'by {}'
                 '</p>'.format(speaker_and_affiliation)
             ),
@@ -341,9 +338,9 @@ class Seminar():
             </html>
         '''.format(css,
                    p['name'],
-                   p['datetime_and_place'],
+                   p['datetime_place'],
                    p['title'],
-                   p['speaker_and_affiliation'],
+                   p['speaker'],
                    p['abstract'],
                    )
         return html

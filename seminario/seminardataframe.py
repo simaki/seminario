@@ -20,8 +20,8 @@ class SeminarDataFrame(pd.core.frame.DataFrame):
         - 'speaker'
         - 'affiliation
         - 'title'
-        - 'abstract file'
-        - 'slide file'
+        - 'abstract'
+        - 'slide'
     """
 
     def __init__(self, data=None, **kwargs):
@@ -57,12 +57,17 @@ class SeminarDataFrame(pd.core.frame.DataFrame):
                  date begin time end time place        speaker  ...
         0  2019-01-01      12:00    13:00  101A  Alice Speaker  ...
         1  2019-02-02      12:30    13:30  102B     Bob Talker  ...
-                   title abstract file slide file
-        0   Apple Effect     alice.txt  alice.pdf
-        1  Banana Effect       bob.txt    bob.pdf
+                   title   abstract      slide
+        0   Apple Effect  alice.txt  alice.pdf
+        1  Banana Effect    bob.txt    bob.pdf
         """
         def _to_time(s):
-            return datetime.datetime.strptime(s, '%H:%M').time()
+            try:
+                t = datetime.datetime.strptime(str(s), '%H:%M').time()
+            except ValueError:
+                return None
+            else:
+                return t
 
         database = database or _Config.database
         if database is None:
@@ -86,13 +91,20 @@ class SeminarDataFrame(pd.core.frame.DataFrame):
         - database : str, path object or file-like object
             Path to write.
         """
+        def _to_YYYYMMDD(s):
+            if s is None:
+                return ''
+            else:
+                return s.strftime('%Y/%m/%d')
+
         def _to_HHMM(s):
             if s is None:
                 return ''
             else:
                 return s.strftime('%H:%M')
 
-        self_ = self
+        self_ = self.copy()
+        self_['date'] = self_['date'].map(_to_YYYYMMDD)
         self_['begin time'] = self_['begin time'].map(_to_HHMM)
         self_['end time'] = self_['end time'].map(_to_HHMM)
 
@@ -100,7 +112,8 @@ class SeminarDataFrame(pd.core.frame.DataFrame):
         if database is None:
             raise ValueError('The database is neither set nor specified.')
         else:
-            self.to_csv(database)
+            print(self_)
+            self_.to_csv(database)
 
     def add(
         self,
@@ -151,6 +164,11 @@ class SeminarDataFrame(pd.core.frame.DataFrame):
         - interactive : bool, default False
             If True, edit interactively.
         """
+        if interactive:
+            index = self._choose_index()
+        elif index is None:
+            raise ValueError('Index is not specified.')
+
         seminar = Seminar(self.iloc[index, :])
         seminar_new = seminar.edit(data,
                                    inplace=False,
