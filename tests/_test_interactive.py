@@ -1,8 +1,6 @@
-import shutil
 import unittest
+import shutil
 import seminario
-
-from context import config
 
 
 class TestInteractive(unittest.TestCase):

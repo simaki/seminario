@@ -1,12 +1,10 @@
-import datetime
 import os
-import re
 
 import pandas as pd
 import pdfkit
 
 from seminario.config import _Config
-from seminario._io import _read_item, _read_data, _edit_data
+from seminario._io import _read_data, _edit_data
 
 
 class Seminar():

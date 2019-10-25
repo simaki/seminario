@@ -2,13 +2,13 @@ import unittest
 
 import pandas as pd
 import seminario
-from seminario._io import(
+from seminario._io import (
     _print_ticker,
     _read_data,
     _edit_data,
 )
 
-from context import(
+from context import (
     config,
     dict_seminar_A,
 )
@@ -31,6 +31,7 @@ class TestIO(unittest.TestCase):
         sdf = pd.concat([sdf] * 10, ignore_index=True)
         i = sdf._choose_index()
         print(i)
+
 
 if __name__ == '__main__':
     # TestIO().test_print_ticker()

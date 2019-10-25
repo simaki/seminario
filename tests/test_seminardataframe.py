@@ -43,6 +43,7 @@ class TestIO(unittest.TestCase):
         self.assertEqual(seminario.Seminar(sdf_new.iloc[0, :]), self.seminar_A)
         self.assertEqual(seminario.Seminar(sdf_new.iloc[1, :]), self.seminar_B)
 
+
 class TestAdd(unittest.TestCase):
 
     def setUp(self):

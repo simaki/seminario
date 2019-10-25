@@ -1,7 +1,6 @@
 import unittest
 
 import pandas as pd
-import datetime
 import seminario
 
 from context import (

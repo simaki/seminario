@@ -5,7 +5,6 @@ import pathlib
 import seminario
 from seminario.config import _Config
 
-
 from context import (
     config,
     absent,
@@ -32,7 +31,11 @@ class TestConfig(unittest.TestCase):
             tba_abstract    = config['tba_abstract'],
         )
 
-        for k in ['database', 'poster_css', 'dir_abstract', 'dir_slide', 'dir_poster']:
+        for k in ['database',
+                  'poster_css',
+                  'dir_abstract',
+                  'dir_slide',
+                  'dir_poster']:
             config[k] = pathlib.Path(config[k])
 
         items = [

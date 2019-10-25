@@ -1,3 +1,5 @@
+# flake8: noqa
+
 name = 'seminario'
 
 from seminario.config import setup
