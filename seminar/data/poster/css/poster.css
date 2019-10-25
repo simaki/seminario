@@ -16,7 +16,7 @@ body {
 	text-align: center;
 	font-size: 3em;
 }
-.datetime_and_place, .speaker_and_affiliation, .title {
+.datetime_place, .speaker, .title {
 	text-align: center;
 	font-size: 2em;
 	line-height: 1em;
