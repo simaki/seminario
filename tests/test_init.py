@@ -10,22 +10,27 @@ from seminario import Seminar
 def isinstance_maybe(obj, typing):
     return (obj is None) or isinstance(obj, typing)
 
-def casedata():
-    cases = list(pathlib.Path('./cases/').glob('*.yml'))
+def valid_data():
+    cases = list(pathlib.Path('./cases/valid/').glob('*.yml'))
     cases.sort()
     for case in cases:
         with open(case) as f:
             yield yaml.load(f, Loader=yaml.FullLoader)
 
-@pytest.mark.parametrize('data', casedata())
+def invalid_data():
+    cases = list(pathlib.Path('./cases/invalid/').glob('*.yml'))
+    cases.sort()
+    for case in cases:
+        with open(case) as f:
+            yield yaml.load(f, Loader=yaml.FullLoader)
 
-# ----------
+@pytest.mark.parametrize('valid_data', valid_data())
 
-def test_typing(data):
+def test_typing(valid_data):
     """
     Test if Seminar.__init__ automatically convert typing.
     """
-    seminar = Seminar(data)
+    seminar = Seminar(valid_data)
     key_typing = [
         ('date', datetime.date),
         ('begin_time', datetime.time),
@@ -40,5 +45,9 @@ def test_typing(data):
     for key, typing in key_typing:
         assert isinstance_maybe(seminar.data[key], typing)
 
+@pytest.mark.parametrize('invalid_data', invalid_data())
 
+def test_initerror(invalid_data):
+    with pytest.raises(ValueError):
+        seminar = Seminar(invalid_data)
 

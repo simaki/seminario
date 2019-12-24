@@ -2,7 +2,7 @@
 
 name = 'seminario'
 
-from seminario.seminar import Seminar
-from seminario.database import Database
-from seminario.poster import PosterGenerator
+from .seminar import Seminar
+from .database import Database
+from .poster import PosterGenerator
 
