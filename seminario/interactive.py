@@ -54,10 +54,10 @@ def quit():
 
 
 f = {
-    'A': Add,
-    'U': Update,
-    'P': Poster,
-    'Q': Quit,
+    'A': add,
+    'U': update,
+    'P': poster,
+    'Q': quit,
 }
 
 

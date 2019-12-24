@@ -29,7 +29,7 @@ class IOSeminarData:
 
     def read_data(self):
         return {
-            key: __read_value(key)
+            key: self.__read_value(key)
             for key in self.__class__.data_keys
         }
 
@@ -41,7 +41,7 @@ class IOSeminarData:
         if key in self.__class__.data_keys:
             return self.__read_else(key)
 
-    def __read_date(key):
+    def __read_date(self, key):
         re_date = r'\d{4}[-/]\d{2}[-/]\d{2}'
         while True:
             enter = 'date (YYYY-MM-DD)'
@@ -57,7 +57,7 @@ class IOSeminarData:
             else:
                 print('Invalid input: {i}')
 
-    def __read_time(key):
+    def __read_time(self, key):
         re_time = r'\d{2}:\d{2}'
         while True:
             enter = f'{key} (HH:MM)'
@@ -73,10 +73,10 @@ class IOSeminarData:
             else:
                 print('Invalid input: {i}')
 
-    def __read_else(key):
+    def __read_else(self, key):
         return input(f'- Enter {key:<18} : ') or None
 
-    def update_data(seminar):
+    def update_data(self, seminar):
         re_symbols = r'(?i)[DBEPSFTAL]$'
 
         data = copy(seminar.data)
@@ -91,7 +91,7 @@ class IOSeminarData:
                 if re.fullmatch(r'(?i)[Y]$', i):
                     correct = True
                     valid_input = True
-                elif re.fullmatch(_re_ticker, i):
+                elif re.fullmatch(re_symbols, i):
                     key = self.__class__.__symbols[i]
                     data[key] = self.__read_value(key)
                     valid_input = True
@@ -100,7 +100,7 @@ class IOSeminarData:
 
         return data
 
-    def __print_symbols(data):
+    def __print_symbols(self, data):
         print(
             '\n'.join([
                 f'({symbol}) {key}: {data[key]}'
@@ -108,6 +108,17 @@ class IOSeminarData:
             ])
         )
 
-    def choose_index(database):
-        ...
+    def choose_index(self, database):
+        num_show = 5
+        data = database.data.copy()
+
+        while len(data.index):
+            print(data.tail(num_show))
+
+            index = input('- Enter index : ') or None
+            index = int(index) if index else None
+            if index in data.index:
+                return index
+            data = data.iloc[:-num_show]
+
         return index
