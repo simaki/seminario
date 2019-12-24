@@ -8,7 +8,9 @@ before_script:
   - pip install flake8
   - pip install pyyaml
 script:
-  - echo "script start"
-  - sh tests/pytest.sh
+  - echo "pytest start"
+  - sh tests/test.sh
+  - echo "pytest end"
+  - echo "flake8 start"
   - flake8 ./seminario/
-  - echo "script end"
+  - echo "flake8 end"
