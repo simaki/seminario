@@ -1,4 +1,5 @@
 import os
+from typing import Union
 
 import pandas as pd
 import pdfkit
@@ -7,243 +8,109 @@ from seminario.config import _Config
 from seminario._io import _read_data, _edit_data
 
 
+Pathlike = Optional[Union[str, os.PathLike]]
+
+
 class Seminar():
     """
     Represent a seminar.
 
     Paramteres
     ----------
-    - date : datetime.date
-        Date of the seminar.
-    - begin_time : datetime.time
-        Beginnig time of the seminar.
-    - end_time : datetime.time
-        End time of the seminar.
-    - place : str
-        Place of the seminar.
-    - speaker : str
-        Name of the speaker.
-    - affiliation : str
-        Affiliation of the speaker.
-    - title : str
-        Title of the seminar talk.
-    - abstract_file : str
-        Relative path of the abstract file to ``_Config.dir_abstract``.
-    - slide_file : str
-        Relative path of the slide file to ``_Config.dir_slide``.
+    - data : dict
+        The data of the seminar.
+        - name : str
+        - date : datetime.date
+        - begin_time : datetime.time
+        - end_time : datetime.time
+        - place : str
+        - speaker : str
+        - affiliation : str
+        - title : str
+        - abstract_file : str
+        - slide_file : str
     """
-    def __init__(
-        self,
-        data=None,
-        interactive=False,
-        date=None,
-        begin_time=None,
-        end_time=None,
-        place=None,
-        speaker=None,
-        affiliation=None,
-        title=None,
-        abstract_file=None,
-        slide_file=None
-    ):
-        """
-        Initialize self.
+    __data_key = (
+        'name',
+        'date',
+        'begin_time',
+        'end_time',
+        'place',
+        'speaker',
+        'affiliation',
+        'title',
+        'abstract_file',
+        'slide_file',
+    )
+    def __init__(self, data=None):
+        data = self.__class__.__check_data(data)
+        self.__data = data
 
-        Examples
-        --------
+    @classmethod
+    def __check_data(cls, data):
+        if isinstance(data, dict):
+            raise TypeError('Parameter "data" must be dict.')
+        # Check typing
+        for key, value in data.items():
+            if key in ('date', ):
+                if not isinstance(value, Optional[datetime.date]):
+                    raise TypeError(f'{key} must be datetime.date or None.')
+            if key in ('begin_time', 'end_time', ):
+                if not isinstance(value, Optional[datetime.time]):
+                    raise TypeError(f'{key} must be datetime.time or None.')
+            if key in ('abstract_file', 'slide_file', ):
+                if not isinstance(value, PathLike):
+                    raise TypeError(f'{key} must be path-like or None.')
+            if key in cls.__data_keys:
+                if not isinstance(value, Optional[str]):
+                    raise TypeError(f'{key} must be str or None.')
+            raise ValueError(f'Invalid key: {key}')
+        # Fill missing key with None
+        for key in cls.__data_keys:
+            data[key] = data.get(key, None)
+        return data
 
-        >>> seminar = seminario.Seminar(
-        ...         date            = datetime.date(2019, 1, 1),
-        ...         begin_time      = datetime.time(12, 0),
-        ...         end_time        = datetime.time(13, 0),
-        ...         place           = '101A'
-        ...         speaker         = 'Alice Speaker',
-        ...         affiliation     = 'Alabama University',
-        ...         title           = 'Apple Effect',
-        ...         abstract_file   = 'alice.txt'
-        ...         slide_file      = 'alice.pdf'
-        ... )
-        >>> type(seminar)
-        <class 'seminario.Seminar'>
-        >>> seminar
-        - date        : 2019-01-01
-        - begin time  : 12:00
-        - end_time    : 13:00
-        - place       : 101A
-        - speaker     : Alice Speaker
-        - affiliation : Alabama University
-        - title       : Apple Effect
-        - abstract    : alice.txt
-        - slide       : alice.pdf
-
-        The following example initializes the same ``Seminar`` from ``dict``.
-
-        >>> data = {
-        ...     'date':         datetime.date(2019, 1, 1),
-        ...     'begin time':   datetime.time(12, 0),
-        ...     'end time':     datetime.time(13, 0),
-        ...     'place':        '101A',
-        ...     'speaker':      'Alice Speaker',
-        ...     'affiliation':  'Alabama University',
-        ...     'title':        'Apple Effect',
-        ...     'abstract':     'alice.txt'
-        ...     'slide':        'alice.pdf'
-        ... }
-        >>> seminar = seminario.Seminar(data=data)
-        """
-        if interactive:
-            self.__init__(data=_read_data())
-            self.edit(interactive=True)  # confirm
-        elif data is None:
-            self.date = date
-            self.begin_time = begin_time
-            self.end_time = end_time
-            self.place = place
-            self.speaker = speaker
-            self.affiliation = affiliation
-            self.title = title
-            self.abstract_file = abstract_file
-            self.slide_file = slide_file
-        elif isinstance(data, dict):
-            self.__init__(
-                data=None,
-                date=data.get('date'),
-                begin_time=data.get('begin time'),
-                end_time=data.get('end time'),
-                place=data.get('place'),
-                speaker=data.get('speaker'),
-                affiliation=data.get('affiliation'),
-                title=data.get('title'),
-                abstract_file=data.get('abstract'),
-                slide_file=data.get('slide'),
-            )
-        elif isinstance(data, pd.Series):
-            self.__init__(
-                data=None,
-                date=data['date'],
-                begin_time=data['begin time'],
-                end_time=data['end time'],
-                place=data['place'],
-                speaker=data['speaker'],
-                affiliation=data['affiliation'],
-                title=data['title'],
-                abstract_file=data['abstract'],
-                slide_file=data['slide'],
-            )
-        else:
-            raise TypeError('Invalid type of data: ', type(data))
+    @property
+    def data(self):
+        return self.__data
 
     @property
     def abstract(self):
         """Return abstract sentences of self."""
-        if self.abstract_file is None:
+        if self.data['abstract_file'] is None:
             return None
-        try:
-            path = _Config.dir_abstract / self.abstract_file
-            with open(path) as f:
-                abstract = f.read()
-        except FileNotFoundError as e:
-            print(e)
-            return None
-        else:
-            return abstract
-
-    @property
-    def _dict(self):
-        """Return ``dict`` of parameters."""
-        return {
-            'date':         self.date,
-            'begin time':   self.begin_time,
-            'end time':     self.end_time,
-            'place':        self.place,
-            'speaker':      self.speaker,
-            'affiliation':  self.affiliation,
-            'title':        self.title,
-            'abstract':     self.abstract_file,
-            'slide':        self.slide_file,
-        }
+        path = _Config.dir_abstract / self.data['abstract_file']
+        if not path.exists():
+            raise FileNotFoundError(f'abstract_file {path} does not exist.')
+        with open(path) as f:
+            return f.read()
 
     def __str__(self):
-        return '\n'.join([
-            '- {} : {}'.format(key.ljust(13), value)
-            for key, value in self._dict.items()
-        ])
+        pass
 
-    def __eq__(self, other):
-        for key, value in self._dict.items():
-            if value != getattr(other, key.replace(' ', '_')):
-                return False
-        return True
-
-    def _update_inplace(self, data):
+    def edit(self, data={}):
         """
-        Parameters
-        ----------
-        - data : Seminar
-            New data of seminar.
-        """
-        for key, value in data._dict.items():
-            k = key.replace(' ', '_')
-            v = value or getattr(self, k)
-            setattr(self, k, v)
-
-    def edit(
-        self,
-        data: dict = {},
-        interactive=False,
-        inplace=False,
-    ):
-        """
-        Edit ``self`` inplace.
+        Edit self inplace.
 
         Parameters
         ----------
         - data : dict
-            New information of the seminar.
-        - interactive : bool, default False
-            If True, edit interactively.
-        - inplace : bool, default False
-            If True, edit inplace.
+            New data of the seminar.
         """
-        if interactive:
-            result = Seminar(data=_edit_data(self._dict))
-        else:
-            result = Seminar(data=data)
+        for key, value in data.items():
+            self.__data[key] = value
 
-        if inplace:
-            self._update_inplace(result)
-        else:
-            return result
-
-    def to_Series(self):
+    def as_series(self):
         """
         Return self as ``pandas.Series``.
 
         Returns
         -------
         pandas.Series
-
-        Example
-        -------
-
-        >>> seminar
-        date        : 2019-01-01
-        begin time  : 12:00
-        end time    : 13:00
-        place       : 101A
-        speaker     : Alice Speaker
-        title       : Apple Effect
-        abstract    : alice.txt
-        slide       : alice.pdf
-        >>> seminar.to_SeminarDataFrame()
-                date begin time end time place        speaker ...
-        0 2019-01-01      12:00    13:00  101A  Alice Speaker ...
-                 title   abstract      slide
-        0 Apple Effect  alice.txt  alice.pdf
         """
-        return pd.Series(data=self._dict)
+        return pd.Series(self.data)
 
-    def to_DataFrame(self):
+    def as_frame(self):
         """
         Return self as ``pandas.DataFrame`` with a single index.
 
@@ -251,7 +118,7 @@ class Seminar():
         -------
         pandas.DataFrame
         """
-        return pd.DataFrame([self.to_Series()], index=[0])
+        return pd.DataFrame([self.as_series()], index=[0])
 
     def _to_html(self, css):
         """
