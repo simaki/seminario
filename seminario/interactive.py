@@ -44,7 +44,7 @@ def poster(seminar_name, csv_database, dir_abstract, css):
     seminar = Seminar(database.data.iloc[index].to_dict())
 
     path = 'poster.pdf'
-    poster_generator = PosterGenerator(css=css).to_pdf(seminar, path=path)
+    PosterGenerator(css=css).to_pdf(seminar, path=path)
 
     print('\nMade a poster: {path}.')
 
