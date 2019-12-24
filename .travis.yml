@@ -9,7 +9,7 @@ before_script:
   - pip install pyyaml
 script:
   - echo "pytest start"
-  - sh tests/test.sh
+  - sh tests/pytest.sh
   - echo "pytest end"
   - echo "flake8 start"
   - flake8 ./seminario/
