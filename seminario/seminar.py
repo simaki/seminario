@@ -51,6 +51,7 @@ class Seminar():
         if isinstance(data, dict):
             raise TypeError('Parameter "data" must be dict.')
         # Check typing
+        # TODO automatically convert type
         for key, value in data.items():
             if key in ('date', ):
                 if not isinstance(value, Optional[datetime.date]):
