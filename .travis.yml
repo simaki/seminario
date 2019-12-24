@@ -6,4 +6,5 @@ install:
   - echo "install end"
 script:
   - echo "script start"
+  - sh tests/pytest.sh
   - echo "script end"

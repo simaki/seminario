@@ -9,11 +9,6 @@ from context import (
     dict_seminar_n,
 )
 
-seminario.setup(
-    dir_abstract='./data/abstract/',
-    dir_poster='./data/poster/',
-)
-
 
 def assertEqual_seminar(self, seminar, dict_expected):
     pairs_items = [

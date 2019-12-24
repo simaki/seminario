@@ -1,4 +1,3 @@
-from datetime.datetime import strptime
 import re
 
 import pandas as pd
@@ -22,38 +21,7 @@ class Database:
         # Check columns
         if not set(data.columns) == cls.data_keys:
             raise ValueError('Invalid columns')
-        # Convert date, time to datetime objects
-        data['date'] = data['date'].map(cls.__to_date)
-        data['begin_time'] = data['begin_time'].map(cls.__to_time)
-        data['end_time'] = data['end_time'].map(cls.__to_time)
-        # np.nan -> None
         return data
-
-    @staticmethod
-    def __to_date(date):
-        if not date:  # empty
-            return None
-        if not re.fullmatch(r'\d\d\d\d[-/]\d\d[-/]\d\d'):
-            raise ValueError('Invalid date value: {date}')
-        try:
-            return strptime(date, '%Y-%m-%d')
-        except ValueError:
-            pass
-        try:
-            return strptime(date, '%Y/%m/%d')
-        except ValueError:
-            return None
-
-    @staticmethod
-    def __to_time(time):
-        if not time:  # empty
-            return None
-        if not re.fullmatch(r'\d\d:\d\d'):
-            raise ValueError('Invalid time value: {time}')
-        try:
-            return strptime(time, '%H:%M')
-        except ValueError:
-            return None
 
     @classmethod
     def read_csv(cls, csv, **kwargs):

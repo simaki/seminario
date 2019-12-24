@@ -25,8 +25,8 @@ class Seminar():
         - speaker : str
         - affiliation : str
         - title : str
-        - abstract_file : str
-        - slide_file : str
+        - abstract_file : pathlib.PosixPath
+        - slide_file : pathlib.PosixPath
     """
     data_keys = (
         'name',
@@ -41,38 +41,59 @@ class Seminar():
         'slide_file',
     )
 
-    def __init__(self, data, dir_abstract='./data/seminar/'):
-        data = self.__class__.__check_data(data)
+    def __init__(self, data, dir_abstract='./data/abstract/'):
+        data = self.__class__.__typing_data(data)
         self.__data = data
         self.dir_abstract = pathlib.Path(dir_abstract)
 
+    @staticmethod
+    def __to_date(date):
+        if not date:  # empty
+            return None
+        try:
+            return datetime.datetime.strptime(date, '%Y-%m-%d').date()
+        except ValueError:
+            return datetime.datetime.strptime(date, '%Y/%m/%d').date()
+
+    @staticmethod
+    def __to_time(time):
+        return datetime.datetime.strptime(time, '%H:%M').time() if time else None
+
+    @staticmethod
+    def __to_file(file):
+        return pathlib.Path(file) if file else None
+
+    @staticmethod
+    def __to_other(value):
+        return str(value) if value else None
+
     @classmethod
-    def __check_data(cls, data):
-        if isinstance(data, dict):
-            raise TypeError('Parameter "data" must be dict.')
-        # Check typing
-        # TODO automatically convert type
+    def __typing_data(cls, data):
+        if not isinstance(data, dict):
+            raise TypeError('data must be dict.')
+
+        # Check and convert typing
         for key, value in data.items():
             if key in ('date', ):
-                if not isinstance(value, Optional[datetime.date]):
-                    raise TypeError(f'{key} must be datetime.date or None.')
-            if key in ('begin_time', 'end_time', ):
-                if not isinstance(value, Optional[datetime.time]):
-                    raise TypeError(f'{key} must be datetime.time or None.')
-            if key in ('abstract_file', 'slide_file', ):
-                if not isinstance(value, PathLike):
-                    raise TypeError(f'{key} must be path-like or None.')
-            if key in cls.data_keys:
-                if not isinstance(value, Optional[str]):
-                    raise TypeError(f'{key} must be str or None.')
-            raise ValueError(f'Invalid key: {key}')
+                data[key] = cls.__to_date(value)
+            elif key in ('begin_time', 'end_time', ):
+                data[key] = cls.__to_time(value)
+            elif key in ('abstract_file', 'slide_file', ):
+                data[key] = cls.__to_file(value)
+            elif key in cls.data_keys:
+                data[key] = cls.__to_other(value)
+            else:
+                raise ValueError(f'Invalid key: {key}')
+
         # Fill missing key with None
         for key in cls.data_keys:
             data[key] = data.get(key, None)
+
         return data
 
     @property
     def data(self):
+        """Return data of self."""
         return self.__data
 
     @property
@@ -87,7 +108,7 @@ class Seminar():
             return f.read()
 
     def __str__(self):
-        pass
+        pass  # TODO
 
     def edit(self, data={}):
         """
