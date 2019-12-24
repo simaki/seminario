@@ -4,6 +4,8 @@ install:
   - echo "install start"
   - pip install -r requirements.txt
   - echo "install end"
+before_script:
+  - pip install pyyaml
 script:
   - echo "script start"
   - sh tests/pytest.sh
