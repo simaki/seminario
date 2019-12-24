@@ -1,4 +1,6 @@
+import os
 import pdfkit
+import pathlib
 
 
 class PosterGenerator:
@@ -22,6 +24,7 @@ class PosterGenerator:
         'abstract_file': None,
         'slide_file': None,
     }
+
     def __init__(self, css, tba=None):
         """Initialize self"""
         self.__class__.__check_css(css)
@@ -44,9 +47,11 @@ class PosterGenerator:
         if begin_time is None and end_time is None:
             time = ''
         else:
-            begin_time = begin_time.strftime('%H:%M') if begin_time is not None \
+            begin_time = begin_time.strftime('%H:%M') \
+                if begin_time is not None \
                 else self.__tba['begin_time']
-            end_time = end_time.strftime('%H:%M') if end_time is not None \
+            end_time = end_time.strftime('%H:%M') \
+                if end_time is not None \
                 else self.__tba['end_time']
             time = f', {begin_time} - {end_time}'
 
@@ -55,10 +60,10 @@ class PosterGenerator:
     def __place(self, place):
         return place or self.__tba['place']
 
-    def __title(self, place):
+    def __title(self, title):
         return title or self.__tba['title']
 
-    def __abstract(self, place):
+    def __abstract(self, abstract):
         return abstract.replace('\n', '<br>') if abstract is not None \
             else self.__tba['abstract']
 
@@ -118,7 +123,7 @@ class PosterGenerator:
             ),
             'abstract': (
                 '<p class="abstract">'
-                'Abstract: {abstract}'
+                f'Abstract: {abstract}'
                 '</p>'
             ),
         }

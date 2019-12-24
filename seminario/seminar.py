@@ -1,14 +1,11 @@
 import os
-from typing import Union
+from typing import Union, Optional
 
+import datetime
 import pandas as pd
-import pdfkit
-
-from seminario.config import _Config
-from seminario._io import _read_data, _edit_data
 
 
-Pathlike = Optional[Union[str, os.PathLike]]
+PathLike = Optional[Union[str, os.PathLike]]
 
 
 class Seminar():
@@ -42,6 +39,7 @@ class Seminar():
         'abstract_file',
         'slide_file',
     )
+
     def __init__(self, data=None):
         data = self.__class__.__check_data(data)
         self.__data = data
