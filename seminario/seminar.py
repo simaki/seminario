@@ -1,4 +1,5 @@
 import os
+import pathlib
 from typing import Union, Optional
 
 import datetime
@@ -27,7 +28,7 @@ class Seminar():
         - abstract_file : str
         - slide_file : str
     """
-    __data_key = (
+    data_keys = (
         'name',
         'date',
         'begin_time',
@@ -40,9 +41,10 @@ class Seminar():
         'slide_file',
     )
 
-    def __init__(self, data=None):
+    def __init__(self, data, dir_abstract='./data/seminar/'):
         data = self.__class__.__check_data(data)
         self.__data = data
+        self.dir_abstract = pathlib.Path(dir_abstract)
 
     @classmethod
     def __check_data(cls, data):
@@ -59,12 +61,12 @@ class Seminar():
             if key in ('abstract_file', 'slide_file', ):
                 if not isinstance(value, PathLike):
                     raise TypeError(f'{key} must be path-like or None.')
-            if key in cls.__data_keys:
+            if key in cls.data_keys:
                 if not isinstance(value, Optional[str]):
                     raise TypeError(f'{key} must be str or None.')
             raise ValueError(f'Invalid key: {key}')
         # Fill missing key with None
-        for key in cls.__data_keys:
+        for key in cls.data_keys:
             data[key] = data.get(key, None)
         return data
 
@@ -77,7 +79,7 @@ class Seminar():
         """Return abstract sentences of self."""
         if self.data['abstract_file'] is None:
             return None
-        path = _Config.dir_abstract / self.data['abstract_file']
+        path = self.dir_abstract / self.data['abstract_file']
         if not path.exists():
             raise FileNotFoundError(f'abstract_file {path} does not exist.')
         with open(path) as f:
@@ -98,7 +100,7 @@ class Seminar():
         for key, value in data.items():
             self.__data[key] = value
 
-    def as_series(self):
+    def to_series(self):
         """
         Return self as ``pandas.Series``.
 
@@ -108,7 +110,7 @@ class Seminar():
         """
         return pd.Series(self.data)
 
-    def as_frame(self):
+    def to_frame(self):
         """
         Return self as ``pandas.DataFrame`` with a single index.
 
@@ -116,4 +118,4 @@ class Seminar():
         -------
         pandas.DataFrame
         """
-        return pd.DataFrame([self.as_series()], index=[0])
+        return pd.DataFrame([self.to_series()], index=[0])

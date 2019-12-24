@@ -151,7 +151,17 @@ class PosterGenerator:
 
         return html
 
-    def to_pdf(self, seminar, path='poster.pdf', verbose=True):
+    def to_pdf(self, seminar, path='poster.pdf'):
+        """
+        Generate pdf file of poster.
+
+        Parameters
+        ----------
+        - seminar : Seminar
+            Seminar to make a poster.
+        - path : path-like, optional
+            Path to make a poster.
+        """
         tmp = 'tmp.html'
         self.to_html(seminar, tmp)
         pdfkit.from_file(tmp, path)
