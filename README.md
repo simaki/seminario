@@ -1,6 +1,6 @@
 # Seminario
 
-[![version](https://img.shields.io/pypi/v/seminario.svg)](https://test.pypi.org/project/seminario/)
+[![version](https://img.shields.io/pypi/v/seminario.svg)](https://pypi.org/project/seminario/)
 [![Build Status](https://travis-ci.org/simaki/seminario.svg?branch=master)](https://travis-ci.com/simaki/seminario)
 [![LICENSE](https://img.shields.io/github/license/simaki/seminario)](LICENSE)
 
