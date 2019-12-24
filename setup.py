@@ -15,7 +15,7 @@ with open('requirements.txt') as f:
 
 setup(
     name='seminario',
-    version='0.1.0',
+    version='0.2.0',
     description='Python package for seminar organization.',
     long_description=readme,
     long_description_content_type="text/markdown",
