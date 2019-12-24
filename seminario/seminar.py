@@ -50,6 +50,8 @@ class Seminar():
     def __to_date(date):
         if not date:  # empty
             return None
+        if isinstance(date, datetime.date):
+            return date
         try:
             return datetime.datetime.strptime(date, '%Y-%m-%d').date()
         except ValueError:
@@ -57,6 +59,8 @@ class Seminar():
 
     @staticmethod
     def __to_time(time):
+        if isinstance(time, datetime.time):
+            return time
         return datetime.datetime.strptime(time, '%H:%M').time() \
             if time else None
 

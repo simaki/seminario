@@ -1,28 +1,52 @@
 import re
-import seminario
+
+from .seminar import Seminar
+from .database import Database
+from .poster import PosterGenerator
+from ._io import IOSeminarData
 
 
-def add():
+def add(seminar_name, csv_database, dir_abstract):
     """Add a new seminar to the database and overwrite."""
-    smdf = seminario.SeminarDataFrame.read_database()
-    smdf = smdf.add(interactive=True)
-    smdf.to_database()
-    print(smdf.tail())
-    print('\nAdded a seminar.')
+    database = Database.read_csv(csv_database)
+
+    data = IOSeminarData().read_data().update({'name': seminar_name})
+    seminar = Seminar(data)
+
+    database.add(seminar)
+    database.to_csv(csv_database)
+
+    print(database.data.tail())
+    print('\nAdded a seminar to database.')
 
 
-def edit():
-    """Edit a seminar in the database and overwrite."""
-    smdf = seminario.SeminarDataFrame.read_database()
-    smdf.edit(interactive=True)
-    print('\nEdited a seminar.')
+def update(seminar_name, csv_database, dir_abstract):
+    """Update a seminar in the database and overwrite."""
+    database = Database.read_csv(csv_database)
+
+    index = IOSeminarData().choose_index(database)
+    seminar = Seminar(database.data.iloc[index].to_dict())
+
+    data = IOSeminarData().update_data(seminar)
+    seminar.update(data)
+
+    database.update(index, seminar)
+    database.to_csv(csv_database)
+
+    print('\nUpdated database.')
 
 
-def poster():
+def poster(seminar_name, csv_database, dir_abstract, css):
     """Make a poster of a seminar in the database."""
-    smdf = seminario.SeminarDataFrame.read_database()
-    smdf.make_poster(interactive=True)
-    print('\nMade a poster.')
+    database = Database.read_csv(csv_database)
+
+    index = IOSeminarData().choose_index(database)
+    seminar = Seminar(database.data.iloc[index].to_dict())
+
+    path = 'poster.pdf'
+    poster_generator = PosterGenerator(css=css).to_pdf(seminar, path=path)
+
+    print('\nMade a poster: {path}.')
 
 
 def quit():
@@ -30,23 +54,23 @@ def quit():
 
 
 f = {
-    'A': add,
-    'E': edit,
-    'P': poster,
-    'Q': quit,
+    'A': Add,
+    'U': Update,
+    'P': Poster,
+    'Q': Quit,
 }
 
 
-def main():
-    name = seminario.config._Config.name
-    print('\n{}\n{}'.format(name, '=' * len(name)))
+def main(seminar_name, csv_database, dir_abstract):
+    print(f'''
+    {seminar_name}
+    {'=' * len(seminar_name)}
 
-    print((
-        '(A) Add seminar\n'
-        '(E) Edit seminar\n'
-        '(P) Make Poster\n'
-        '(Q) Quit\n'
-    ))
+    (A) Add seminar
+    (E) Edit seminar
+    (P) Make poster
+    (Q) Quit
+    ''')
 
     done = False
     while not done:

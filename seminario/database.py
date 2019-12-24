@@ -22,10 +22,13 @@ class Database:
         return data
 
     @classmethod
-    def read_csv(cls, csv, **kwargs):
-        data = pd.read_csv(csv, index_col=0, **kwargs)
+    def read_csv(cls, path, **kwargs):
+        data = pd.read_csv(path, index_col=0, **kwargs)
         data = cls.__check_data(data)
         return cls(data=data)
+
+    def to_csv(self, path):
+        self.data.to_csv(path)
 
     def add(self, seminar):
         """Add a new seminar inplace."""

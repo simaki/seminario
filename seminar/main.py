@@ -1,17 +1,17 @@
 import seminario
 
 
-seminario.setup(
-    database='./data/database.csv',
-    dir_abstract='./data/abstract/',
-    dir_slide='./data/slide/',
-    dir_poster='./data/poster/',
-    poster_css='./data/poster/css/poster.css',
-)
+CSV_DATABASE = './data/database.csv'
+SEMINAR_NAME = 'Seminar'
+DIR_ABSTRACT = './data/abstract/'
 
 
 def main():
-    seminario.interactive.main()
+    seminario.interactive.main(
+        csv_database=CSV_DATABASE,
+        seminar_name=SEMINAR_NAME,
+        dir_abstract=DIR_ABSTRACT,
+    )
 
 
 if __name__ == '__main__':
