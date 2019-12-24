@@ -47,7 +47,22 @@ def test_typing(valid_data):
 
 @pytest.mark.parametrize('invalid_data', invalid_data())
 
-def test_initerror(invalid_data):
+def test_valueerror(invalid_data):
     with pytest.raises(ValueError):
         seminar = Seminar(invalid_data)
 
+def test_fillna():
+    seminar = Seminar(data={})
+    expected = {
+        'name': None,
+        'date': None,
+        'begin_time': None,
+        'end_time': None,
+        'place': None,
+        'speaker': None,
+        'affiliation': None,
+        'title': None,
+        'abstract_file': None,
+        'slide_file': None,
+    }
+    assert seminar.data == expected
