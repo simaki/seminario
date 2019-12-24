@@ -57,7 +57,8 @@ class Seminar():
 
     @staticmethod
     def __to_time(time):
-        return datetime.datetime.strptime(time, '%H:%M').time() if time else None
+        return datetime.datetime.strptime(time, '%H:%M').time() \
+            if time else None
 
     @staticmethod
     def __to_file(file):

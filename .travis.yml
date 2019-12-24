@@ -9,4 +9,5 @@ before_script:
 script:
   - echo "script start"
   - sh tests/pytest.sh
+  - flake8 ./seminario/
   - echo "script end"
