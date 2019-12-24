@@ -1,137 +1,124 @@
 import datetime
 import re
+from copy import copy
+
+from .seminar import Seminar
 
 
-_ticker_item = {
-    'D': 'date',
-    'B': 'begin time',
-    'E': 'end time',
-    'P': 'place',
-    'S': 'speaker',
-    'F': 'affiliation',
-    'T': 'title',
-    'A': 'abstract',
-    'L': 'slide',
-}
-_list_ticker = _ticker_item.keys()
-_list_item = _ticker_item.values()
-_re_ticker = r'(?i)[DBEPSFTAL]$'
-
-
-def _print_ticker(data: dict):
+class IOSeminarData:
     """
-    Print seminar data with tickers.
+    IO
     """
-    print('\n'.join([
-        '({}) {:<13} : {}'.format(ticker, item, data[item])
-        for ticker, item in _ticker_item.items()
-    ]))
+    data_keys = Seminar.data_keys
 
+    __symbols = {
+        'N': 'name',
+        'D': 'date',
+        'B': 'begin_time',
+        'E': 'end_time',
+        'P': 'place',
+        'S': 'speaker',
+        'F': 'affiliation',
+        'T': 'title',
+        'A': 'abstract_file',
+        'L': 'slide_file',
+    }
 
-def _read_item(item: str):
-    """
-    Read standard input of ``item`` and return it.
-    If not entered, return ``None``.
+    def __init__(self):
+        pass
 
-    Parameters
-    ----------
-    - item : {'date', 'begin time', ...}
-        Item to read.
+    def read_data(self):
+        return {
+            key: self.__read_value(key)
+            for key in self.__class__.data_keys
+        }
 
-    Returns
-    -------
-    datetime.date, datetime.time or str
-        Value of ``item``.
-    """
+    def __read_value(self, key):
+        if key in ('date', ):
+            return self.__read_date(key)
+        if key in ('begin_time', 'end_time'):
+            return self.__read_time(key)
+        if key in self.__class__.data_keys:
+            return self.__read_else(key)
 
-    re_date = r'\d{4}[-/]\d{2}[-/]\d{2}'
-    re_time = r'\d{2}:\d{2}'
-
-    def _read_date():
+    def __read_date(self, key):
+        re_date = r'\d{4}[-/]\d{2}[-/]\d{2}'
         while True:
-            i = input('- Enter {:<18} : '.format('date (YYYY-MM-DD)')) or None
+            enter = 'date (YYYY-MM-DD)'
+            i = input(f'- Enter {enter:<18} : ') or None
             if i is None:
                 return None
-            elif re.match(re_date, i):
+            if re.match(re_date, i):
                 y, m, d = int(i[:4]), int(i[5:7]), int(i[8:])
                 try:
-                    date = datetime.date(y, m, d)
+                    return datetime.date(y, m, d)
                 except ValueError:  # eg i = '9999-99-99'
                     pass
-                else:
-                    return date
             else:
-                print('Invalid input: {}'.format(i))
+                print('Invalid input: {i}')
 
-    def _read_time(item):
+    def __read_time(self, key):
+        re_time = r'\d{2}:\d{2}'
         while True:
-            i = input('- Enter {:<18} : '.format(item + ' (HH:MM)')) or None
+            enter = f'{key} (HH:MM)'
+            i = input(f'- Enter {enter:<18} : ') or None
             if i is None:
                 return None
             elif re.match(re_time, i):
                 h, m = int(i[:2]), int(i[3:])
                 try:
-                    time = datetime.time(h, m)
+                    return datetime.time(h, m)
                 except ValueError:  # eg i = '99:99'
                     pass
+            else:
+                print('Invalid input: {i}')
+
+    def __read_else(self, key):
+        return input(f'- Enter {key:<18} : ') or None
+
+    def update_data(self, seminar):
+        re_symbols = r'(?i)[DBEPSFTAL]$'
+
+        data = copy(seminar.data)
+        correct = False
+
+        while not correct:
+            self.__print_symbols(data)
+            valid_input = False
+
+            while not valid_input:
+                i = input('- Correct?  Press Y (Yes) or key to edit: ')
+                if re.fullmatch(r'(?i)[Y]$', i):
+                    correct = True
+                    valid_input = True
+                elif re.fullmatch(re_symbols, i):
+                    key = self.__class__.__symbols[i]
+                    data[key] = self.__read_value(key)
+                    valid_input = True
                 else:
-                    return time
-            else:
-                print('Invalid input: {} '.format(i))
+                    print('Invalid input: {}'.format(i))
 
-    def _read_else(item):
-        return input('- Enter {:<18} : '.format(item)) or None
+        return data
 
-    if item in ('date'):
-        return _read_date()
-    elif item in ('begin time', 'end time'):
-        return _read_time(item)
-    elif item in _list_item:
-        return _read_else(item)
-    else:
-        raise ValueError('Invalid item: ', item)
+    def __print_symbols(self, data):
+        print(
+            '\n'.join([
+                f'({symbol}) {key}: {data[key]}'
+                for symbol, key in self.__class__.__symbols.items()
+            ])
+        )
 
+    def choose_index(self, database):
+        num_show = 5
+        data = database.data.copy()
 
-def _read_data():
-    """
-    Read seminar data from standard input.
+        while len(data.index):
+            print(data.tail(num_show))
 
-    Returns
-    -------
-    dict
-        Data of a seminar.
-    """
-    return {item: _read_item(item) for item in _list_item}
+            index = input('- Enter index : ') or None
+            index = int(index) if index else None
+            if index in data.index:
+                return index
+            data = data.iloc[:-num_show]
 
-
-def _edit_data(data: dict):
-    """
-    Edit seminar data interactively.
-
-    Parameters
-    ----------
-    - data : dict
-        Old data of a seminar.
-
-    Returns
-    -------
-    dict
-        New data of a seminar.
-    """
-    new_data = data
-    correct = False
-    while not correct:
-        _print_ticker(new_data)
-        valid_input = False
-        while not valid_input:
-            i = input('- Correct? Press Y or key for item to edit: ')
-            if re.match(r'(?i)[Y]$', i):
-                correct = True
-                valid_input = True
-            elif re.match(_re_ticker, i):
-                item = _ticker_item[i.upper()]
-                new_data[item] = _read_item(item)
-                valid_input = True
-            else:
-                print('Invalid input: {}'.format(i))
-    return new_data
+        return index

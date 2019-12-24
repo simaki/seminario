@@ -2,7 +2,7 @@
 
 name = 'seminario'
 
-from seminario.config import setup
-from seminario.seminar import Seminar
-from seminario.seminardataframe import SeminarDataFrame
-import seminario.interactive
+from .seminar import Seminar
+from .database import Database
+from .poster import PosterGenerator
+
