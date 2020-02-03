@@ -1,119 +1,135 @@
 import os
-import pathlib
+from pathlib import Path
 from typing import Union, Optional
 
-import datetime
+from .utils import Bunch
+from datetime.datatime import strptime
 import pandas as pd
 
 
-PathLike = Optional[Union[str, os.PathLike]]
-
-
-class Seminar():
+class Seminar(Bunch):
     """
     Represent a seminar.
 
-    Paramteres
+    Attribures
     ----------
-    - data : dict
-        The data of the seminar.
-        - name : str
-        - date : datetime.date
-        - begin_time : datetime.time
-        - end_time : datetime.time
-        - place : str
-        - speaker : str
-        - affiliation : str
-        - title : str
-        - abstract_file : pathlib.PosixPath
-        - slide_file : pathlib.PosixPath
+    - name : str
+    - date : datetime.date
+    - begin_time : datetime.time
+    - end_time : datetime.time
+    - place : str
+    - speaker : str
+    - affiliation : str
+    - title : str
+    - abstract_file : pathlib.PosixPath
+    - slide_file : pathlib.PosixPath
     """
-    data_keys = (
-        'name',
-        'date',
-        'begin_time',
-        'end_time',
-        'place',
-        'speaker',
-        'affiliation',
-        'title',
-        'abstract_file',
-        'slide_file',
-    )
+    __dir_abstract = Path('./data/abstract/')
+    # data_keys = (
+    #     'name',
+    #     'date',
+    #     'begin_time',
+    #     'end_time',
+    #     'place',
+    #     'speaker',
+    #     'affiliation',
+    #     'title',
+    #     'abstract_file',
+    #     'slide_file',
+    # )
+    def __init__(self, *kwargs):
+        super().__init__(**kwargs)
+        # self = self._check_data()  # not necessary
 
-    def __init__(self, data, dir_abstract='./data/abstract/'):
-        data = self.__class__.__typing_data(data)
-        self.__data = data
-        self.dir_abstract = pathlib.Path(dir_abstract)
+    def __check_data(self, data):
+        self = self._check_keys()
+        self = self._parse_date()
+        self = self._parse_time()
 
-    @staticmethod
-    def __to_date(date):
-        if not date:  # empty
-            return None
-        if isinstance(date, datetime.date):
-            return date
-        try:
-            return datetime.datetime.strptime(date, '%Y-%m-%d').date()
-        except ValueError:
-            return datetime.datetime.strptime(date, '%Y/%m/%d').date()
+    def _check_keys(self):
+        """
+        Check there is no invalid keys and fill absent key with None.
 
-    @staticmethod
-    def __to_time(time):
-        if isinstance(time, datetime.time):
-            return time
-        return datetime.datetime.strptime(time, '%H:%M').time() \
-            if time else None
+        Returns
+        -------
+        self : Seminar
+            Seminar that has only and all valid keys.
+        """
+        # Check there is no invalid key
+        for key in self.keys():
+            if key not in self._valid_keys:
+                raise ValueError(f'Data has an invalid key: {key}')
 
-    @staticmethod
-    def __to_file(file):
-        return pathlib.Path(file) if file else None
+        # Fill absent value with None
+        for key in self._valid_keys:
+            if not hasattr(self, key):
+                setattr(self, key, None)
 
-    @staticmethod
-    def __to_other(value):
-        return str(value) if value else None
+        return self
 
-    @classmethod
-    def __typing_data(cls, data):
-        if not isinstance(data, dict):
-            raise TypeError('data must be dict.')
+    # def _parse_date(self):
+    #     if self.date is None:
+    #         return self
 
-        # Check and convert typing
-        for key, value in data.items():
-            if key in ('date', ):
-                data[key] = cls.__to_date(value)
-            elif key in ('begin_time', 'end_time', ):
-                data[key] = cls.__to_time(value)
-            elif key in ('abstract_file', 'slide_file', ):
-                data[key] = cls.__to_file(value)
-            elif key in cls.data_keys:
-                data[key] = cls.__to_other(value)
-            else:
-                raise ValueError(f'Invalid key: {key}')
+    #     if isinstance(self.date, datetime.date):
+    #         return self
 
-        # Fill missing key with None
-        for key in cls.data_keys:
-            data[key] = data.get(key, None)
+    #     try:
+    #         self.date = datetime.datetime.strptime(date, '%Y-%m-%d').date()
+    #     except ValueError:
+    #         self.date = datetime.datetime.strptime(date, '%Y/%m/%d').date()
 
-        return data
+    #     return self
 
-    @property
-    def data(self):
-        """Return data of self."""
-        return self.__data
+    # def _parse_time(self):
+    #     if self.begin_time is None and self.end_time is None:
+    #         return self
+
+    #     for time in ('begin_time', 'end_time'):
+    #         attr = getattr(self, time)
+    #         if attr is not None:
+    #             if isinstance(attr, datetime.date):
+    #                 setattr(self, time, attr)
+    #             else:
+    #                 setattr(self, time, strptime(time, '%H:%M').time())
+    #     return self
+
+
+    #     if isinstance(time, datetime.time):
+    #         return time
+    #     return datetime.datetime.strptime(time, '%H:%M').time() \
+    #         if time else None
+
+    # @staticmethod
+    # def __to_file(file):
+    #     return pathlib.Path(file) if file else None
+
+    # @staticmethod
+    # def __to_other(value):
+    #     return str(value) if value else None
 
     @property
     def abstract(self):
-        """Return abstract sentences of self."""
-        if self.data['abstract_file'] is None:
-            return None
-        path = self.dir_abstract / self.data['abstract_file']
+        """
+        Return abstract sentences of self.
+
+        Returns
+        -------
+        abstract : str
+        """
+        return self.__read_abstract()
+
+    def __read_abstract(self):
+        if self.abstract_file is None:
+            return ''
+
+        path = self.dir_abstract / self.abstract_file
+
         if not path.exists():
             raise FileNotFoundError(f'abstract_file {path} does not exist.')
+
         with open(path) as f:
             return f.read()
-
-    def __str__(self):
-        pass  # TODO
 
     def edit(self, data={}):
         """
@@ -125,24 +141,24 @@ class Seminar():
             New data of the seminar.
         """
         for key, value in data.items():
-            self.__data[key] = value
+            setattr(self, key, value)
 
-    def to_series(self):
-        """
-        Return self as ``pandas.Series``.
+    # def to_series(self):
+    #     """
+    #     Return self as ``pandas.Series``.
 
-        Returns
-        -------
-        pandas.Series
-        """
-        return pd.Series(self.data)
+    #     Returns
+    #     -------
+    #     pandas.Series
+    #     """
+    #     return pd.Series(self.data)
 
-    def to_frame(self):
-        """
-        Return self as ``pandas.DataFrame`` with a single index.
+    # def to_frame(self):
+    #     """
+    #     Return self as ``pandas.DataFrame`` with a single index.
 
-        Returns
-        -------
-        pandas.DataFrame
-        """
-        return pd.DataFrame([self.to_series()], index=[0])
+    #     Returns
+    #     -------
+    #     pandas.DataFrame
+    #     """
+    #     return pd.DataFrame([self.to_series()], index=[0])

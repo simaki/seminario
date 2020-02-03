@@ -6,7 +6,7 @@ from .poster import PosterGenerator
 from ._io import IOSeminarData
 
 
-def add(seminar_name, csv_database, dir_abstract):
+def add(seminar_name, csv_database, dir_abstract, css=None):
     """Add a new seminar to the database and overwrite."""
     database = Database.read_csv(csv_database)
 
@@ -20,7 +20,7 @@ def add(seminar_name, csv_database, dir_abstract):
     print('\nAdded a seminar to database.')
 
 
-def update(seminar_name, csv_database, dir_abstract):
+def update(seminar_name, csv_database, dir_abstract, css=None):
     """Update a seminar in the database and overwrite."""
     database = Database.read_csv(csv_database)
 
@@ -61,7 +61,7 @@ f = {
 }
 
 
-def main(seminar_name, csv_database, dir_abstract):
+def main(seminar_name, csv_database, dir_abstract, css):
     print(f'''
     {seminar_name}
     {'=' * len(seminar_name)}
@@ -76,7 +76,12 @@ def main(seminar_name, csv_database, dir_abstract):
     while not done:
         answer = input('- Choose : ')
         if re.match('[AEPQaepq]', answer):
-            f[answer[0].upper()]()
+            f[answer[0].upper()](
+                seminar_name=seminar_name,
+                csv_database=csv_database,
+                dir_abstract=dir_abstract,
+                css=css,
+            )
             done = True
         else:
             print('Invalid input : ', answer)

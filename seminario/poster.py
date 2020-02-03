@@ -1,6 +1,14 @@
 import os
 import pdfkit
 import pathlib
+import yaml
+
+from os.path import dirname
+from pathlib import Path
+
+from .utils import Bunch
+
+lib_path = Path(dirname(__file__))
 
 
 class PosterGenerator:
@@ -12,66 +20,86 @@ class PosterGenerator:
     - tba : dict
         The default values.
     """
-    __tba = {
-        'name': 'Seminar',
-        'date': 'TBA',
-        'begin_time': '',
-        'end_time': '',
-        'place': 'TBA',
-        'speaker': 'TBA',
-        'affiliation': '',
-        'title': 'TBA',
-        'abstract_file': None,
-        'slide_file': None,
-    }
+    with open(lib_path / 'tba.yml') as f:
+        tba = Bunch(yaml.load(f, Loader=yaml.FullLoader))
 
     def __init__(self, css, tba=None):
         """Initialize self"""
-        self.__class__.__check_css(css)
-        self.css = css
-        self.tba = tba or self.__class__.__tba
+        self.css = Path(css)
+        self.tba = tba or self.tba
 
     @staticmethod
     def __check_css(css):
-        """Check if css exists."""
+        """
+        Check if css exists.
+
+        Returns
+        -------
+        None
+        """
         if not pathlib.Path(css).exists():
             raise FileNotFoundError(f'css file {css} does not exist.')
 
-    def __name(self, name):
-        return name or self.__tba['name']
+    def _get_maybe(self, seminar, attribute):
+        return getattr(seminar, attribute, None) or getattr(self.tba, attribute, '')
 
-    def __date_time(self, date, begin_time, end_time):
-        date = date.strftime('%Y %b %d (%a)') if date is not None \
-            else self.__tba['date']
+    def _get_name(self, seminar):
+        """
+        Return seminar name.
 
-        if begin_time is None and end_time is None:
-            time = ''
+        Examples
+        --------
+        If exists:
+        >>> seminar.name
+        'Nice Seminar'
+        >>> poster_generator._get_name(seminar)
+        'Nice Seminar'
+
+        If not:
+        >>> seminar.name
+        None
+        >>> poster_generator.tba.name
+        'Good Seminar'
+        >>> poster_generator._get_name(seminar)
+        'Good Seminar'
+        """
+        return self._get_maybe(seminar, 'name')
+
+    def _get_date_time(self, seminar):
+        date = self._get_maybe(seminar, 'date')
+        begin_time = self._get_maybe(seminar, 'begin_time')
+        end_time = self._get_maybe(seminar, 'end_time')
+
+        if date:
+            date = date.strftime('%Y %b %d (%a)')
+        if begin_time:
+            begin_time = begin_time.strftime('%H:%M')
+        if end_time:
+            end_time = end_time.strftime('%H:%M')
+
+        if begin_time or end_time:
+            return f'{date}, {begin_time} - {end_time}'
         else:
-            begin_time = begin_time.strftime('%H:%M') \
-                if begin_time is not None \
-                else self.__tba['begin_time']
-            end_time = end_time.strftime('%H:%M') \
-                if end_time is not None \
-                else self.__tba['end_time']
-            time = f', {begin_time} - {end_time}'
+            return f'{date}'
 
-        return f'{date}{time}'
+    def _get_place(self, seminar):
+        return self._get_maybe(seminar, 'place')
 
-    def __place(self, place):
-        return place or self.__tba['place']
+    def _get_title(self, seminar):
+        return self._get_maybe(seminar, 'title')
 
-    def __title(self, title):
-        return title or self.__tba['title']
+    def _get_abstract(self, seminar):
+        abstract = self._get_maybe(seminar, 'abstract')
+        return abstract.replace('\n', '<br>')
 
-    def __abstract(self, abstract):
-        return abstract.replace('\n', '<br>') if abstract is not None \
-            else self.__tba['abstract']
+    def _get_speaker_affiliation(self, seminar):
+        speaker = self._get_maybe(seminar, 'speaker')
+        affiliation = self._get_maybe(seminar, 'affiliation')
 
-    def __speaker_affiliation(self, speaker, affiliation):
-        speaker = speaker or self.__tba['speaker']
-        affiliation = f' ({affiliation})' if affiliation is not None \
-            else ''
-        return f'{speaker}{affiliation}'
+        if affiliation:
+            return f'{spaker} ({affiliation})'
+        else:
+            return f'{spaker}'
 
     def to_html(self, seminar, path=None):
         """
@@ -84,23 +112,18 @@ class PosterGenerator:
         - path : path-like, optional
             Write html file if specified.
         """
+        self.__check_css(css)
+
         # str of data or TBA values
-        name = self.name(seminar.data['name'])
-        date_time = self.__date_time(
-            seminar.data['date'],
-            seminar.data['begin_time'],
-            seminar.data['end_time'],
-        )
-        place = self.__place(seminar.data['place'])
-        title = self.__title(seminar.data['title'])
-        speaker_affiliation = self.__speaker_affiliation(
-            seminar.data['speaker'],
-            seminar.data['affiliation'],
-        )
-        abstract = self.__abstract(seminar.data['abstract'])
+        name = self.get_name(seminar)
+        date_time = self._get_date_time(seminar)
+        place = self._get_place(seminar)
+        title = self._get_title(seminar)
+        speaker_affiliation = self._get_speaker_affiliation(seminar)
+        abstract = self._get_abstract(seminar)
 
         # Paragraph
-        p = {
+        p = Bunch({
             'name': (
                 '<p class="name">'
                 f'{name}'
@@ -126,7 +149,7 @@ class PosterGenerator:
                 f'Abstract: {abstract}'
                 '</p>'
             ),
-        }
+        })
 
         # HTML
         html = f'''<!DOCTYPE html><html>
@@ -136,11 +159,11 @@ class PosterGenerator:
             </head>
             <body>
             <div id="contents">
-            {p['name']}
-            {p['date_time_place']}
-            {p['title']}
-            {p['speaker_affiliation']}
-            {p['abstract']}
+            {p.name}
+            {p.date_time_place}
+            {p.title}
+            {p.speaker_affiliation}
+            {p.abstract}
             </div>
             </body>
             </html>'''
