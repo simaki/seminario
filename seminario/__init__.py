@@ -1,9 +1,8 @@
 # flake8: noqa
 
-name = 'seminario'
+from . import utils
 
-from .interactive import main
+# from .interactive import main
 
 from .seminar import Seminar
-from .database import Database
-from .poster import PosterGenerator
+from .poster import PosterMaker

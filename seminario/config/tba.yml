@@ -1,10 +1,10 @@
-- name : 'Seminar'
-- date : 'TBA'
-- begin_time : ''
-- end_time : ''
-- place : 'TBA'
-- speaker : 'TBA'
-- affiliation : ''
-- title : 'TBA'
-- abstract_file : None
-- slide_file : None
+name : 'Seminar'
+date : 'TBA'
+begin_time : ''
+end_time : ''
+place : 'TBA'
+speaker : 'TBA'
+affiliation : ''
+title : 'TBA'
+abstract_file : None
+slide_file : None
