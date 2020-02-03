@@ -28,6 +28,11 @@ class IOSeminarData:
         pass
 
     def read_data(self):
+        """
+        Returns
+        -------
+        data : dict
+        """
         return {
             key: self.__read_value(key)
             for key in self.__class__.data_keys
@@ -77,6 +82,11 @@ class IOSeminarData:
         return input(f'- Enter {key:<18} : ') or None
 
     def update_data(self, seminar):
+        """
+        Returns
+        -------
+        data : dict
+        """
         re_symbols = r'(?i)[DBEPSFTAL]$'
 
         data = copy(seminar.data)
@@ -109,6 +119,11 @@ class IOSeminarData:
         )
 
     def choose_index(self, database):
+        """
+        Returns
+        -------
+        index : int
+        """
         num_show = 5
         data = database.data.copy()
 

@@ -1,18 +1,18 @@
 import os
 import pdfkit
-import pathlib
-import yaml
 
 from os.path import dirname
 from pathlib import Path
 
 from .utils import Bunch
+from .config import config
 
-lib_path = Path(dirname(__file__))
 
 
 class PosterGenerator:
     """
+    Generate poster.
+
     Parameters
     ----------
     - css : path-like
@@ -20,10 +20,10 @@ class PosterGenerator:
     - tba : dict
         The default values.
     """
-    with open(lib_path / 'tba.yml') as f:
-        tba = Bunch(yaml.load(f, Loader=yaml.FullLoader))
+    tba = config.tba
+    css = config.path['css']
 
-    def __init__(self, css, tba=None):
+    def __init__(self, tba=None, css=css):
         """Initialize self"""
         self.css = Path(css)
         self.tba = tba or self.tba
