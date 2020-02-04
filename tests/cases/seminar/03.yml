@@ -1,9 +1,9 @@
-date: '2000-02-31'
-begin_time:
-end_time:
-place:
-speaker:
+date: '2000-01-01'
+begin_time: '12:00'
+end_time: '13:34'
+place: '101'
+speaker: 'Alice Speaker'
 affiliation:
-title:
-abstract_file:
-slide_file:
+title: 'Apple Effect'
+abstract_file: 'alice.txt'
+slide_file: '20000101alice.pdf'

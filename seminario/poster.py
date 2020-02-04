@@ -22,7 +22,7 @@ class PosterMaker:
         self.css = css or config.path.css
         self.tba = tba or config.tba
 
-    def make_pdf(self, seminar, path='poster.pdf'):
+    def make_poster(self, seminar, path='poster.pdf'):
         """
         Make a poster.
 

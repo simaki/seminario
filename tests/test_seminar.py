@@ -44,10 +44,11 @@ def yml_to_seminar(yml):
 # --------------------------------------------------------------------------------
 
 
-@pytest.fixture(scope='module', autouse=True)
-def setup():
-    config.path.abstract = tests_path / 'data/abstract/'
-    config.path.css = tests_path / 'data/poster/poster.css'
+# @pytest.fixture(scope='module', autouse=True)
+# def setup():
+#     config.setup(tests_path / 'data/config/default.yaml')
+#     config.path.abstract = tests_path / 'data/abstract/'
+#     config.path.css = tests_path / 'data/poster/poster.css'
 
 
 @pytest.mark.parametrize('seminardata', params_seminardata[:1])

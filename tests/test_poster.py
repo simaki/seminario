@@ -46,6 +46,7 @@ def yml_to_seminar(yml):
 
 @pytest.fixture(scope='module', autouse=True)
 def setup():
+    config.setup(tests_path / 'data/config/default.yml')
     config.path.abstract = tests_path / 'data/abstract/'
     config.path.css = tests_path / 'data/poster/poster.css'
 
@@ -54,7 +55,8 @@ def setup():
 def test_poster(seminardata):
     seminar = yml_to_seminar(seminardata)
     maker = PosterMaker()
-    maker.make_pdf(seminar)
+    path = tests_path / f'output/{seminardata.stem}.pdf'
+    maker.make_poster(seminar, path=path)
 
 
 @pytest.mark.parametrize('seminardata', params_seminardata[:1])
@@ -64,4 +66,4 @@ def test_absent_css(seminardata):
     maker = PosterMaker()
 
     with pytest.raises(FileNotFoundError):
-        maker.make_pdf(seminar)
+        maker.make_poster(seminar)
