@@ -12,10 +12,12 @@ class PosterMaker:
 
     Parameters
     ----------
-    - css : path-like
+    - css : path-like, default None
         Path of poster css.
+        If None, use `config.path.css`.
     - tba : dict
         Default values.
+        If None, use `config.tba`.
     """
     def __init__(self, css=None, tba=None):
         self.css = css or config.path.css
@@ -50,8 +52,6 @@ class PosterMaker:
         ----------
         - seminar : Seminar
             Seminar to make a poster html.
-        - path : path-like, optional
-            Write html file if specified.
 
         Returns
         -------
@@ -127,23 +127,11 @@ class PosterMaker:
 
     def _get_seminar_name(self, seminar):
         """
-        Return seminar name.
+        Return seminar name from config.
 
-        Examples
-        --------
-        If exists:
-        >>> seminar.name
-        'Nice Seminar'
-        >>> poster_generator._get_name(seminar)
-        'Nice Seminar'
-
-        If not:
-        >>> seminar.name
-        None
-        >>> poster_generator.tba.name
-        'Good Seminar'
-        >>> poster_generator._get_name(seminar)
-        'Good Seminar'
+        Returns
+        -------
+        seminar_name : str
         """
         return config.seminar_name
 
