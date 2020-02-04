@@ -271,6 +271,14 @@ python-versions = "*"
 version = "0.1.8"
 
 [[package]]
+category = "main"
+description = "Simple python wrapper for wkhtmltopdf"
+name = "wkhtmltopdf"
+optional = false
+python-versions = "*"
+version = "0.2"
+
+[[package]]
 category = "dev"
 description = "Backport of pathlib-compatible object wrapper for zip files"
 marker = "python_version < \"3.8\""
@@ -287,7 +295,7 @@ docs = ["sphinx", "jaraco.packaging (>=3.2)", "rst.linker (>=1.9)"]
 testing = ["pathlib2", "contextlib2", "unittest2"]
 
 [metadata]
-content-hash = "123280f7d98e604c11a2e60333869bdbdee6ca149e7b5d303266e0d8bbb3f37b"
+content-hash = "c4c3e1fc6ec1024ba99bee8f833b7c69ddd2e52b0b958e5bb970d150ef66f4dd"
 python-versions = "^3.6.1"
 
 [metadata.files]
@@ -461,6 +469,12 @@ six = [
 wcwidth = [
     {file = "wcwidth-0.1.8-py2.py3-none-any.whl", hash = "sha256:8fd29383f539be45b20bd4df0dc29c20ba48654a41e661925e612311e9f3c603"},
     {file = "wcwidth-0.1.8.tar.gz", hash = "sha256:f28b3e8a6483e5d49e7f8949ac1a78314e740333ae305b4ba5defd3e74fb37a8"},
+]
+wkhtmltopdf = [
+    {file = "wkhtmltopdf-0.2-py2.5.egg", hash = "sha256:eea6f42dccf58ded01980ae77e52017230db06b508e69fdb4f57c91054f543e0"},
+    {file = "wkhtmltopdf-0.2-py2.6.egg", hash = "sha256:f14972abdecf5ddb6e397e7b4910dad31516c0e146145753ce18144ba73be1a1"},
+    {file = "wkhtmltopdf-0.2-py2.7.egg", hash = "sha256:60c84c327f949a256c6c0752a0a5d8a63daa08d6158f650d6379be9aaa536a94"},
+    {file = "wkhtmltopdf-0.2.tar.gz", hash = "sha256:530fffb5d1faf4f4cd5248c14fd1b4b7fe311541d0660dc2c2272c32b3c72211"},
 ]
 zipp = [
     {file = "zipp-0.6.0-py2.py3-none-any.whl", hash = "sha256:f06903e9f1f43b12d371004b4ac7b06ab39a44adc747266928ae6debfa7b3335"},
