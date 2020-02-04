@@ -41,34 +41,34 @@ class StdIn:
         'slide_file': r'.+\.pdf',
     }
 
-    def read(self, key):
-        """
-        Read standard input.
+    # def read(self, key):
+    #     """
+    #     Read standard input.
 
-        Returns
-        -------
-        value : str or None
-        """
-        while True:
-            try:
-                value = input(f'Input {key}{self.suggestion[key]} : ')
-                value = self._check(value)
-            except ValueError as e:
-                print(e)
-            else:
-                return value
+    #     Returns
+    #     -------
+    #     value : str or None
+    #     """
+    #     while True:
+    #         try:
+    #             value = input(f'Input {key}{self.suggestion[key]} : ')
+    #             value = self._check(value)
+    #         except ValueError as e:
+    #             print(e)
+    #         else:
+    #             return value
 
-    def readall(self):
-        """
-        Read standard input of all keys.
+    # def readall(self):
+    #     """
+    #     Read standard input of all keys.
 
-        Returns
-        -------
-        values : dict
-        """
-        return {
-            key: self.read(key) for key in self.keys
-        }
+    #     Returns
+    #     -------
+    #     values : dict
+    #     """
+    #     return {
+    #         key: self.read(key) for key in self.keys
+    #     }
 
     def _check(self, key, value):
         """
