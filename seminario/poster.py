@@ -2,7 +2,6 @@ import os
 import pdfkit
 
 from pandas import Timestamp
-from pathlib import Path
 from .config import config
 
 

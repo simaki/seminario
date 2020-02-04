@@ -3,8 +3,7 @@ import re
 import pandas as pd
 
 from .seminar import Seminar
-from .database import Database
-from .poster import PosterGenerator
+from .poster import PosterMaker
 from ._io import IOSeminarData
 
 from .config import config
