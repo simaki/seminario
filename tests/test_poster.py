@@ -21,6 +21,7 @@ params_seminardata = [
     tests_path / 'cases/seminar/08.yml',
 ]
 
+
 def yml_to_seminar(yml):
     """
     Parameters

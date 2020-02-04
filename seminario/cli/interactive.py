@@ -2,8 +2,8 @@ import re
 
 import pandas as pd
 
-from .seminar import Seminar
-from .poster import PosterMaker
+from seminario.seminar import Seminar
+from seminario.poster import PosterMaker
 from ._io import IOSeminarData
 
 from .config import config
@@ -53,7 +53,8 @@ def poster():
     index = IOSeminarData().choose_index(database)
     seminar = Seminar(database.data.iloc[index].to_dict())
 
-    PosterGenerator().to_pdf(seminar, path='poster.pdf')
+    path = 'poster.pdf'
+    PosterMaker().to_pdf(seminar, path=path)
 
     print(f'\nMade a poster: {path}.')
 
