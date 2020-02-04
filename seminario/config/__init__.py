@@ -1,3 +1,3 @@
 # flake8: noqa
 
-from . import config
+from .config import config
