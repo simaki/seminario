@@ -1,15 +1,19 @@
-from abc import abstractmethod
+from abc import abstractmethod, ABCMeta
 
 from .bunch import Bunch
 
 
-class Table(Bunch):
+class Table(Bunch, metaclass=ABCMeta):
     """
     Bunch object that is allowed to have only limited attributes.
     """
     def __init__(self, **kwargs):
+        for key in kwargs.keys():
+            if key not in self.attributes:
+                raise AttributeError(key)
         super().__init__(**kwargs)
 
+    @property
     @abstractmethod
     def attributes(self):
         return ()
