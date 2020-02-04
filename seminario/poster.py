@@ -118,7 +118,7 @@ class PosterMaker:
         None
         """
         if not self.css.exists():
-            raise FileNotFoundError(f'css file {config.css} does not exist.')
+            raise FileNotFoundError(f'css file {self.css} does not exist.')
 
     def _get_maybe(self, seminar, attribute):
         return getattr(seminar, attribute, None) \

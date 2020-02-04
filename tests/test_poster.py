@@ -49,7 +49,16 @@ def setup():
 
 @pytest.mark.parametrize('seminardata', params_seminardata)
 def test_poster(seminardata):
-    print(config.path.css)
     seminar = yml_to_seminar(seminardata)
     maker = PosterMaker()
     maker.make_pdf(seminar)
+
+
+@pytest.mark.parametrize('seminardata', params_seminardata[:1])
+def test_absent_css(seminardata):
+    config.path.css = tests_path / 'data/poster/absent.css'
+    seminar = yml_to_seminar(seminardata)
+    maker = PosterMaker()
+
+    with pytest.raises(FileNotFoundError):
+        maker.make_pdf(seminar)
