@@ -16,7 +16,9 @@ class Table(Bunch, metaclass=ABCMeta):
     @property
     @abstractmethod
     def attributes(self):
-        return ()
+        """
+        Attributes that self is allowed to have.
+        """
 
     def __setattr__(self, key, value):
         if key not in self.attributes:
