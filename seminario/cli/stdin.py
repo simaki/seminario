@@ -41,7 +41,7 @@ class StdIn:
         'slide_file': r'.+\.pdf',
     }
 
-    def read(self):
+    def read(self, key):
         """
         Read standard input.
 

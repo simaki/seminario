@@ -26,16 +26,20 @@ def test_table_set():
     assert table['b'] == 'value_b'
     assert table['c'] == 'value_c'
 
-    assert table.d == None
+    assert table.d is None
+
 
 def test_table_error0():
     with pytest.raises(AttributeError):
         table = MyTable()
         print(table.z)
 
+
 def test_table_error1():
     with pytest.raises(AttributeError):
         table = MyTable(z='value_z')
+        print(table)
+
 
 def test_table_error2():
     with pytest.raises(AttributeError):

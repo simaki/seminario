@@ -4,7 +4,7 @@ from os.path import dirname
 from pathlib import Path
 import yaml
 
-from seminario import Seminar, PosterMaker
+from seminario import Seminar
 from seminario.config import config
 
 tests_path = Path(dirname(__file__))
