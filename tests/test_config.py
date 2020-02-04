@@ -66,5 +66,5 @@ def test_default(attr, value):
 
 @pytest.mark.parametrize('attr, value', params_new)
 def test_setup(attr, value):
-    config.setup(tests_path / 'data/config.yml')
+    config.setup(tests_path / 'cases/config/01.yml')
     assert getattr(config, attr) == value

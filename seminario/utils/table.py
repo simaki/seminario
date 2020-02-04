@@ -8,7 +8,7 @@ class Table(Bunch):
     Bunch object that is allowed to have only limited attributes.
     """
     def __init__(self, **kwargs):
-        super().__init__(kwargs)
+        super().__init__(**kwargs)
 
     @abstractmethod
     def attributes(self):

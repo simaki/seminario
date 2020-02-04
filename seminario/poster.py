@@ -17,12 +17,9 @@ class PosterMaker:
     - tba : dict
         Default values.
     """
-    tba = config.tba
-    css = config.path.css
-
-    def __init__(self, tba=None, css=None):
-        self.css = Path(css or self.css)
-        self.tba = tba or self.tba
+    def __init__(self, css=None, tba=None):
+        self.css = css or config.path.css
+        self.tba = tba or config.tba
 
     def make_pdf(self, seminar, path='poster.pdf'):
         """
@@ -122,11 +119,11 @@ class PosterMaker:
         None
         """
         if not self.css.exists():
-            raise FileNotFoundError(f'css file {self.css} does not exist.')
+            raise FileNotFoundError(f'css file {config.css} does not exist.')
 
     def _get_maybe(self, seminar, attribute):
         return getattr(seminar, attribute, None) \
-            or getattr(self.tba, attribute, '')
+            or getattr(self.tba, attribute)
 
     def _get_seminar_name(self, seminar):
         """
@@ -148,7 +145,7 @@ class PosterMaker:
         >>> poster_generator._get_name(seminar)
         'Good Seminar'
         """
-        return config.seminar.seminar_name
+        return config.seminar_name
 
     def _get_date_time(self, seminar):
         date = self._get_maybe(seminar, 'date')
@@ -156,11 +153,20 @@ class PosterMaker:
         end_time = self._get_maybe(seminar, 'end_time')
 
         if date:
-            date = Timestamp(date).strftime('%Y %b %d (%a)')
+            try:
+                date = Timestamp(date).strftime('%Y %b %d (%a)')
+            except ValueError:
+                date = date
         if begin_time:
-            begin_time = Timestamp(begin_time).strftime('%H:%M')
+            try:
+                begin_time = Timestamp(begin_time).strftime('%H:%M')
+            except ValueError:
+                begin_time = begin_time
         if end_time:
-            end_time = Timestamp(end_time).strftime('%H:%M')
+            try:
+                end_time = Timestamp(end_time).strftime('%H:%M')
+            except ValueError:
+                end_time = end_time
 
         if begin_time or end_time:
             return f'{date}, {begin_time} - {end_time}'
