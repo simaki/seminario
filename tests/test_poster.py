@@ -55,7 +55,7 @@ def setup():
 def test_poster(seminardata):
     seminar = yml_to_seminar(seminardata)
     maker = PosterMaker()
-    path = tests_path / f'output/{seminardata.stem}.pdf'
+    path = tests_path / f'outputs/{seminardata.stem}.pdf'
     maker.make_poster(seminar, path=path)
 
 
