@@ -6,8 +6,8 @@ authors = ["Shota Imaki <shota.imaki@icloud.com>"]
 license = "BSD-3-Clause"
 
 [tool.poetry.dependencies]
-python = "^3.6"
-pandas = "^0.25.3"
+python = "^3.6.1"
+pandas = "^1.0.0"
 pdfkit = "^0.6.1"
 
 [tool.poetry.dev-dependencies]
