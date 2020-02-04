@@ -1,27 +1,41 @@
-from .utils import Bunch
+from .utils import Table
 
 from .config import config
 from pathlib import Path
 
 
-class Seminar(Bunch):
+class Seminar(Table):
     """
     Represent a seminar.
 
-    Parameters
+    Attributes
     ----------
-    - date : datetime.date
-    - begin_time : datetime.time
-    - end_time : datetime.time
-    - place : str
-    - speaker : str
-    - affiliation : str
-    - title : str
-    - abstract_file : pathlib.PosixPath
-    - slide_file : pathlib.PosixPath
+    - date
+    - begin_time
+    - end_time
+    - place
+    - speaker
+    - affiliation
+    - title
+    - abstract_file
+    - slide_file
     """
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+    @property
+    def attributes(self):
+        return (
+            'date',
+            'begin_time',
+            'end_time',
+            'place',
+            'speaker',
+            'affiliation',
+            'title',
+            'abstract_file',
+            'slide_file',
+        )
 
     @property
     def abstract(self):
@@ -32,11 +46,8 @@ class Seminar(Bunch):
         -------
         abstract : str
         """
-        return self.__read_abstract()
-
-    def __read_abstract(self):
         if self.abstract_file is None:
-            return ''
+            return None
 
         path = Path(config.path.abstract) / self.abstract_file
 
