@@ -1,10 +1,10 @@
-import yaml
-import pathlib
-import pytest
-import datetime
-from typing import Optional
+# import yaml
+# import pathlib
+# import pytest
+# import datetime
+# from typing import Optional
 
-from seminario import Seminar
+# from seminario import Seminar
 
 
 # def isinstance_maybe(obj, typing):
