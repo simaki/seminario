@@ -22,7 +22,7 @@ install:
 script:
   - echo "script start"
   - pytest --cov=seminario
-  - flake8 seminario
   - echo "script end"
 after_success:
+  - flake8 seminario
   - codecov
