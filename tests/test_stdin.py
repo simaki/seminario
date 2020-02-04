@@ -7,6 +7,7 @@ from seminario.cli.stdin import StdIn
 params_date_valid = [
     '2000/01/01',
     '2000-01-01',
+    '',
 ]
 params_date_invalid = [
     '200-01-01',
@@ -18,6 +19,7 @@ params_date_invalid = [
 params_time_valid = [
     '12:00',
     '00:59',
+    '',
 ]
 params_time_invalid = [
     '1:00',
@@ -27,6 +29,7 @@ params_time_invalid = [
 
 params_abst_valid = [
     'alice.txt',
+    '',
 ]
 params_abst_invalid = [
     'alice.rtf',
@@ -36,6 +39,7 @@ params_abst_invalid = [
 
 params_slide_valid = [
     'alice.pdf',
+    '',
 ]
 params_slide_invalid = [
     'alice.rtf',
