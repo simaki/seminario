@@ -59,12 +59,18 @@ params_new = [
 # --------------------------------------------------------------------------------
 
 
-@pytest.mark.parametrize('attr, value', params_default)
-def test_default(attr, value):
-    assert getattr(config, attr) == value
+@pytest.fixture(scope='module', autouse=True)
+def reset_setup():
+    yield
+    config.setup(tests_path / 'data/config/default.yml')
 
 
-@pytest.mark.parametrize('attr, value', params_new)
-def test_setup(attr, value):
+@pytest.mark.parametrize('key, value', params_default)
+def test_default(key, value):
+    assert getattr(config, key) == value
+
+
+@pytest.mark.parametrize('key, value', params_new)
+def test_setup(key, value):
     config.setup(tests_path / 'cases/config/01.yml')
-    assert getattr(config, attr) == value
+    assert getattr(config, key) == value

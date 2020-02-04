@@ -51,14 +51,10 @@ class Config:
             data_path = data.get('path', None) or {}
 
         self.seminar_name = data.get('seminar_name', None) or self.seminar_name
-        self.tba = Bunch(**{
-            key: data_tba.get(key, None) or value
-            for key, value in self.tba.items()
-        })
-        self.path = Bunch(**{
-            key: data_path.get(key, None) or value
-            for key, value in self.path.items()
-        })
+        for key, value in data_tba.items():
+            setattr(self.tba, key, value)
+        for key, value in data_path.items():
+            setattr(self.path, key, value)
 
 
 config = Config()
