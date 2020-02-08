@@ -16,3 +16,14 @@ $ pip install seminario
 ## Requirement
 
 - [wkhtmltopdf](https://wkhtmltopdf.org/)
+
+## How to use
+
+1. Copy [sample](sample/) directory.
+2. Edit [`config.yml`](sample/data/config.yml) as you like.
+3. Replace [`database.csv`](sample/data/database.csv) with your own one.
+4. That's it!  Now you can add seminars and make posters by running `main.py`:
+
+```sh
+$ python main.py
+```
