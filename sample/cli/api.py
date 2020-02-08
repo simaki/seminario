@@ -15,18 +15,17 @@ class InteractiveAPI:
     """
     def __init__(self, config=None):
         if config:
-            seminario.setup(config)
+            seminario.config.setup(config)
 
     def main(self):
-        print(f'''
-        {seminar_name}
-        {'=' * len(seminar_name)}
-
-        (A) Add seminar
-        (E) Edit seminar
-        (P) Make poster
-        (Q) Quit
-        ''')
+        line = '=' * len(seminario.config.seminar_name)
+        print((
+            f'\n{seminario.config.seminar_name}\n{line}\n'
+            '(A) Add seminar\n'
+            '(E) Edit seminar\n'
+            '(P) Make poster\n'
+            '(Q) Quit\n'
+        ))
 
         operation = input('* Choose operation : ')
 
@@ -43,14 +42,12 @@ class InteractiveAPI:
 
     @property
     def database(self):
-        return pd.read_csv(
-            seminario.config.path.database,
-            index_col=0, parse_dates=['date', 'begin_time', 'end_time']
-        )
+        return pd.read_csv(seminario.config.path.database, index_col=0)
 
     def _add(self):
+        print('\n')
         data = StdIn().read_all()
-        new_seminar = seminario.Seminar(data)
+        new_seminar = seminario.Seminar(**data)
 
         new_database = pd.concat([
             self.database,
@@ -64,18 +61,21 @@ class InteractiveAPI:
         print('\nSuccessfully added a seminar to database.')
 
     def _edit(self):
+        print('\n')
         raise NotImplementedError('Editing is not yet implemented. Sorry!')
 
     def _poster(self):
+        print('\n')
         print(self.database.tail())
 
+        print('\n')
         index = int(input('* Choose index to make a poster : '))
 
-        seminar = seminario.Seminar(self.database.iloc[index, :].to_dict())
-        path = (seminar.date or 'poster') + '.pdf'
+        seminar = seminario.Seminar(**self.database.iloc[index, :].to_dict())
+        path = 'poster.pdf'
         seminario.PosterMaker().make_poster(seminar, path=path)
 
-        print('Created a poster : {path}.')
+        print(f'Created a poster : {path}.')
 
     def _quit(self):
         pass

@@ -1,2 +1,2 @@
-,date,begin_time,end_time,place,speaker,affiliation,title,abstract,slide
+,date,begin_time,end_time,place,speaker,affiliation,title,abstract_file,slide_file
 0,2019-01-01,16:00,17:00,101,Alice Speaker,Alabama University,Apple Effect,alice.txt,alice.pdf

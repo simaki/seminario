@@ -1,7 +1,7 @@
 from os.path import dirname
 from pathlib import Path
 
-from .cli.api import InteractiveAPI
+from cli.api import InteractiveAPI
 
 
 here = Path(dirname(__file__))

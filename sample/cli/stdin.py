@@ -65,7 +65,7 @@ class StdIn:
         while True:
             try:
                 value = input(f'Input {key}{self.suggestion[key]} : ')
-                value = self._check(value)
+                value = self._check(key, value)
             except ValueError as e:
                 print(e)
             else:
