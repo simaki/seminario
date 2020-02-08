@@ -1,0 +1,7 @@
+valid:
+  - 'alice.txt'
+  - ''
+invalid:
+  - 'alice.rtf'
+  - '.txt'
+  - 'alice.txt.rtf'
