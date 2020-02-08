@@ -1,20 +1,15 @@
-import seminario
+from os.path import dirname
+from pathlib import Path
+
+from cli.api import InteractiveAPI
 
 
-CSV_DATABASE = './data/database.csv'
-SEMINAR_NAME = 'Seminar'
-DIR_ABSTRACT = './data/abstract/'
-CSS = 'data/poster/css/poster.css'
-
-
-def main():
-    seminario.main(
-        csv_database=CSV_DATABASE,
-        seminar_name=SEMINAR_NAME,
-        dir_abstract=DIR_ABSTRACT,
-        css=CSS,
-    )
+here = Path(dirname(__file__))
 
 
 if __name__ == '__main__':
-    main()
+    config = here / 'data/config.yml'
+    InteractiveAPI(config=config).main()
+
+
+

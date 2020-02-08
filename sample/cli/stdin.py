@@ -41,34 +41,43 @@ class StdIn:
         'slide_file': r'.+\.pdf',
     }
 
-    # def read(self, key):
-    #     """
-    #     Read standard input.
+    def read(self, key):
+        """
+        Read standard input.
 
-    #     Returns
-    #     -------
-    #     value : str or None
-    #     """
-    #     while True:
-    #         try:
-    #             value = input(f'Input {key}{self.suggestion[key]} : ')
-    #             value = self._check(value)
-    #         except ValueError as e:
-    #             print(e)
-    #         else:
-    #             return value
+        Returns
+        -------
+        value : str or None
 
-    # def readall(self):
-    #     """
-    #     Read standard input of all keys.
+        Raises
+        ------
+        VakueError
+            If input value does not match regex.
 
-    #     Returns
-    #     -------
-    #     values : dict
-    #     """
-    #     return {
-    #         key: self.read(key) for key in self.keys
-    #     }
+        Examples
+        --------
+        >>> StdIn().read('date')
+        Input date (YYYY-HH-MM): '20000-01-01'
+        ValueError: Invalid input: '20000-01-01'
+        Input date (YYYY-HH-MM): '2000-01-01'
+        '2000-01-01'
+        """
+        while True:
+            try:
+                value = input(f'Input {key}{self.suggestion[key]} : ')
+                value = self._check(key, value)
+            except ValueError as e:
+                print(e)
+            else:
+                return value
+
+    def read_all(self):
+        """
+        Returns
+        -------
+        dict
+        """
+        return {key: self.read(key) for key in self.keys}
 
     def _check(self, key, value):
         """

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "seminario"
-version = "0.2.1"
+version = "0.3.0"
 description = "Python package for seminar organization."
 authors = ["Shota Imaki <shota.imaki@icloud.com>"]
 license = "BSD-3-Clause"

@@ -1,0 +1,7 @@
+valid:
+  - 'alice.pdf'
+  - ''
+invalid:
+  - 'alice.rtf'
+  - '.pdf'
+  - 'alice.pdf.rtf'

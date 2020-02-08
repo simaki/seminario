@@ -1,4 +1,6 @@
 import os
+from pathlib import Path
+
 import pdfkit
 
 from pandas import Timestamp
@@ -117,7 +119,7 @@ class PosterMaker:
         -------
         None
         """
-        if not self.css.exists():
+        if not Path(self.css).exists():
             raise FileNotFoundError(f'css file {self.css} does not exist.')
 
     def _get_maybe(self, seminar, attribute):

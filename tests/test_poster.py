@@ -10,19 +10,7 @@ from seminario.config import config
 tests_path = Path(dirname(__file__))
 
 
-params_seminardata = [
-    tests_path / 'cases/seminar/01.yml',
-    tests_path / 'cases/seminar/02.yml',
-    tests_path / 'cases/seminar/03.yml',
-    tests_path / 'cases/seminar/04.yml',
-    tests_path / 'cases/seminar/05.yml',
-    tests_path / 'cases/seminar/06.yml',
-    tests_path / 'cases/seminar/07.yml',
-    tests_path / 'cases/seminar/08.yml',
-    tests_path / 'cases/seminar/09.yml',
-    tests_path / 'cases/seminar/10.yml',
-    tests_path / 'cases/seminar/11.yml',
-]
+params_seminardata = list((tests_path / 'cases/seminar/').glob('*.yml'))
 
 
 def yml_to_seminar(yml):
