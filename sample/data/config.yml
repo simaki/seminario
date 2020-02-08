@@ -1,0 +1,14 @@
+seminar_name : 'Seminar'
+tba:
+  date : 'TBA'
+  begin_time : ''
+  end_time : ''
+  place : 'TBA'
+  speaker : 'TBA'
+  affiliation : ''
+  title : 'TBA'
+  abstract : 'TBA'
+path:
+  database : 'data/database.csv'
+  abstract : 'data/abstract/'
+  css : 'data/poster/css/poster.css'
