@@ -12,3 +12,7 @@ Python package for seminar organization.
 ```sh
 $ pip install seminario
 ```
+
+## Requirement
+
+- [wkhtmltopdf](https://wkhtmltopdf.org/)
